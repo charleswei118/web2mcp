@@ -1,0 +1,14 @@
+name = "web2mcp"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Comma-separated list to expose only some connectors, e.g. "wikipedia,weather,geocode".
+# ENABLED_CONNECTORS = ""
+# Max characters returned per tool call.
+MAX_OUTPUT_CHARS = "20000"
+
+# Secrets (set with `npx wrangler secret put NAME`):
+#   AUTH_TOKEN       - require "Authorization: Bearer <token>" on /mcp
+#   CONNECTORS_JSON  - extra connectors as a JSON array (no redeploy of code needed)
+#   any ${NAME} your connectors reference, e.g. OPENWEATHER_KEY

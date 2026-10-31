@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "web2mcp": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://web2mcp.YOUR-SUBDOMAIN.workers.dev/mcp"]
+    }
+  }
+}

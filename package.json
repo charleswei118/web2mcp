@@ -1,0 +1,17 @@
+{
+  "name": "web2mcp",
+  "version": "0.1.0",
+  "description": "Turn any website or REST API into MCP tools on Cloudflare Workers. Config-driven, zero runtime dependencies.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "dev": "npx wrangler dev",
+    "deploy": "npx wrangler deploy",
+    "smoke": "node scripts/smoke.js"
+  },
+  "keywords": ["mcp", "model-context-protocol", "cloudflare-workers", "ai-agents", "api-gateway", "llm-tools"],
+  "engines": { "node": ">=20" }
+}

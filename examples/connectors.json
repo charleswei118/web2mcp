@@ -1,0 +1,21 @@
+[
+  {
+    "name": "openlibrary",
+    "description": "Search books on Open Library.",
+    "baseUrl": "https://openlibrary.org",
+    "tools": [
+      {
+        "name": "search",
+        "description": "Search books by title or author.",
+        "path": "/search.json",
+        "query": { "q": "{query}", "limit": "{limit}" },
+        "params": {
+          "query": { "type": "string", "required": true },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 20, "default": 5 }
+        },
+        "pick": "docs",
+        "fields": ["title", "author=author_name", "year=first_publish_year"]
+      }
+    ]
+  }
+]
