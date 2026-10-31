@@ -163,9 +163,10 @@ Template rules:
 | `"{arg}"` | Tool argument. As a whole value it keeps its type; missing optional args are dropped. |
 | `"${SECRET}"` | Read from a Worker secret / var — never exposed to the model. |
 | `"${?SECRET}"` | Optional secret: the value is dropped when it is not set. |
-| `pick: "a.b.*.c"` | Select part of the response (`*` maps over arrays). |
+| `pick: "a.b.*.c"` | Select part of the response (`*` maps over arrays; a single value counts as a one-item list). |
 | `fields: ["x", "alias=deep.path"]` | Keep only these fields. |
 | `limit: 10` | Truncate arrays. |
+| `response: "xml"` | Parse an XML/Atom/RSS response into JSON first, so `pick` / `fields` work on it (attributes become `@name`, namespace prefixes are dropped, repeated elements become arrays). Also `"json"`, `"text"` (raw body) or `"auto"` (default). |
 
 **No-code option:** put connectors in the `CONNECTORS_JSON` secret (a JSON array of the same objects) and they appear without touching the code. Use `ENABLED_CONNECTORS="wikipedia,weather"` to expose only some.
 

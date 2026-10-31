@@ -1,4 +1,5 @@
 import { render, renderPath, pick, project, OMIT } from "./template.js";
+import { xmlToJson } from "./xml.js";
 
 const DEFAULT_TIMEOUT_MS = 15000;
 const DEFAULT_MAX_CHARS = 20000;
@@ -50,7 +51,9 @@ export function buildRequest(connector, tool, rawArgs, env = {}) {
 
   const headers = {
     "user-agent": "web2mcp/0.1 (+https://github.com/charleswei118/web2mcp)",
-    accept: "application/json, text/plain;q=0.9, */*;q=0.5",
+    accept: tool.response === "xml"
+      ? "application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.5"
+      : "application/json, text/plain;q=0.9, */*;q=0.5",
     ...render(connector.headers || {}, args, env),
     ...render(tool.headers || {}, args, env),
   };
@@ -94,7 +97,16 @@ export async function execute(connector, tool, args, env = {}, fetchImpl = fetch
     return { isError: true, text: `Upstream ${res.status} ${res.statusText}: ${raw.slice(0, 500)}` };
   }
   let text;
-  if (ctype.includes("json") || /^[\[{]/.test(raw.trim())) {
+  const mode = tool.response || "auto";
+  if (mode === "xml") {
+    let data;
+    try {
+      data = xmlToJson(raw);
+    } catch (e) {
+      return { isError: true, text: `Could not parse XML response: ${e.message}` };
+    }
+    text = JSON.stringify(shape(tool, data), null, 2);
+  } else if (mode !== "text" && (mode === "json" || ctype.includes("json") || /^[\[{]/.test(raw.trim()))) {
     let data;
     try {
       data = JSON.parse(raw);

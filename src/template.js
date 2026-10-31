@@ -82,9 +82,10 @@ export function pick(obj, path) {
     const p = parts[i];
     if (cur === undefined || cur === null) return undefined;
     if (p === "*") {
-      if (!Array.isArray(cur)) return undefined;
+      // A lone value is treated as a one-item list (common with XML, where one repeat is not an array).
+      const list = Array.isArray(cur) ? cur : [cur];
       const rest = parts.slice(i + 1).join(".");
-      return cur.map((item) => pick(item, rest));
+      return list.map((item) => pick(item, rest));
     }
     cur = cur[p];
   }
