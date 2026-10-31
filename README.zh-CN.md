@@ -12,6 +12,23 @@
 
 现在的 AI 智能体（Claude、ChatGPT、Cursor、各种自建 Agent）都在用 **MCP（Model Context Protocol）** 调用外部工具，但大多数网站和 APP 并不支持。`web2mcp` 就是中间的“转换插头”：用几行配置描述一个 HTTP 接口，它立刻变成**任何** AI 都能调用的 MCP 工具，并免费托管在 Cloudflare 边缘网络上。这样不同的 AI 就能共用同一套工具，互联互通。
 
+## 在线体验
+
+演示地址：**https://web2mcp.cwei59969.workers.dev**（工具列表），MCP 端点：
+
+```
+https://web2mcp.cwei59969.workers.dev/mcp
+```
+
+填进任何支持远程 MCP 的客户端即可，或直接用 curl：
+
+```bash
+curl -s https://web2mcp.cwei59969.workers.dev/mcp -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"weather_forecast","arguments":{"latitude":31.23,"longitude":121.47}}}'
+```
+
+演示版受免费额度限制，且关闭了 `reader_read`，正式使用请自行部署。
+
 ## 特点
 
 - **写配置，不写代码**：一个连接器就是一个普通对象（地址、路径、参数）。

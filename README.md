@@ -28,6 +28,23 @@ Every AI agent (Claude, ChatGPT, Cursor, your own bots…) now speaks the **Mode
    Wikipedia  GitHub  any REST API / web page …
 ```
 
+## Try it now
+
+A public demo is running at **https://web2mcp.cwei59969.workers.dev** (tool list) with the MCP endpoint at:
+
+```
+https://web2mcp.cwei59969.workers.dev/mcp
+```
+
+Paste it into any client that supports remote MCP servers, or:
+
+```bash
+curl -s https://web2mcp.cwei59969.workers.dev/mcp -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"weather_forecast","arguments":{"latitude":35.68,"longitude":139.69}}}'
+```
+
+The demo is rate-limited by the free plan and has `reader_read` disabled. Deploy your own for real use.
+
 ## Why
 
 - **Config, not code.** A connector is a plain object: base URL, path, query, params. No SDK to learn.
