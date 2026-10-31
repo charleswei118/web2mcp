@@ -46,7 +46,7 @@ Every AI agent (Claude, ChatGPT, Cursor, your own bots…) now speaks the **Mode
 | `geocode_search` | Place name → coordinates (Open-Meteo) |
 | `weather_forecast` | Current weather + daily forecast (Open-Meteo) |
 | `currency_latest` | ECB exchange rates (Frankfurter) |
-| `github_search_repos`, `github_repo` | Public GitHub repositories |
+| `github_search_repos`, `github_repo` | Public GitHub repositories (set `GITHUB_TOKEN` on Workers: shared IPs hit GitHub's anonymous limit) |
 | `reader_read` | Any web page → clean Markdown (Jina Reader) |
 
 ## Quick start
@@ -122,6 +122,7 @@ Template rules:
 | --- | --- |
 | `"{arg}"` | Tool argument. As a whole value it keeps its type; missing optional args are dropped. |
 | `"${SECRET}"` | Read from a Worker secret / var — never exposed to the model. |
+| `"${?SECRET}"` | Optional secret: the value is dropped when it is not set. |
 | `pick: "a.b.*.c"` | Select part of the response (`*` maps over arrays). |
 | `fields: ["x", "alias=deep.path"]` | Keep only these fields. |
 | `limit: 10` | Truncate arrays. |

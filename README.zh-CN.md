@@ -30,7 +30,7 @@
 | `geocode_search` | 地名转经纬度 |
 | `weather_forecast` | 实时天气与逐日预报 |
 | `currency_latest` | 欧洲央行汇率 |
-| `github_search_repos` / `github_repo` | GitHub 公开仓库 |
+| `github_search_repos` / `github_repo` | GitHub 公开仓库（部署到 Workers 建议设置 `GITHUB_TOKEN`） |
 | `reader_read` | 任意网页转 Markdown |
 
 ## 快速开始
@@ -71,6 +71,7 @@ Claude Desktop / Cursor 等（通过 `mcp-remote`）：
 | --- | --- |
 | `"{arg}"` | 工具参数；整值引用时保留类型，可选参数缺省时自动省略 |
 | `"${SECRET}"` | 读取 Worker 密钥，不会暴露给模型 |
+| `"${?SECRET}"` | 可选密钥，未设置时整项省略 |
 | `pick: "a.b.*.c"` | 选取响应的一部分，`*` 遍历数组 |
 | `fields: ["x", "别名=深层.路径"]` | 只保留这些字段 |
 

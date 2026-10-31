@@ -1,9 +1,10 @@
 // Tiny templating helpers used by connectors.
 //   "{name}"   -> tool argument `name`
 //   "${NAME}"  -> environment secret NAME (Cloudflare secret / var)
+//   "${?NAME}" -> optional secret: if NAME is unset, the whole value is dropped
 
 const ARG_RE = /\{([a-zA-Z0-9_]+)\}/g;
-const ENV_RE = /\$\{([A-Z0-9_]+)\}/g;
+const ENV_RE = /\$\{(\??)([A-Z0-9_]+)\}/g;
 const WHOLE_ARG_RE = /^\{([a-zA-Z0-9_]+)\}$/;
 
 /** Marker returned when a template refers only to a missing optional argument. */
@@ -23,10 +24,17 @@ export function render(value, args = {}, env = {}) {
       return v === undefined || v === null || v === "" ? OMIT : v;
     }
     let missing = false;
+    let optionalMissing = false;
     const out = value
-      .replace(ENV_RE, (_, name) => {
+      .replace(ENV_RE, (_, opt, name) => {
         const v = env[name];
-        if (v === undefined) throw new Error(`Missing secret/env var: ${name}`);
+        if (v === undefined || v === "") {
+          if (opt) {
+            optionalMissing = true;
+            return "";
+          }
+          throw new Error(`Missing secret/env var: ${name}`);
+        }
         return String(v);
       })
       .replace(ARG_RE, (_, name) => {
@@ -37,6 +45,7 @@ export function render(value, args = {}, env = {}) {
         }
         return String(v);
       });
+    if (optionalMissing) return OMIT;
     return missing && out.trim() === "" ? OMIT : out;
   }
   if (Array.isArray(value)) {

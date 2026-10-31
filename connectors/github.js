@@ -1,9 +1,13 @@
 export default {
   name: "github",
   title: "GitHub",
-  description: "Search public GitHub repositories and read repo details (unauthenticated, 60 req/h).",
+  description: "Search public GitHub repositories and read repo details. Set the GITHUB_TOKEN secret for higher rate limits.",
   baseUrl: "https://api.github.com",
-  headers: { accept: "application/vnd.github+json", "x-github-api-version": "2022-11-28" },
+  headers: {
+    accept: "application/vnd.github+json",
+    "x-github-api-version": "2022-11-28",
+    authorization: "Bearer ${?GITHUB_TOKEN}", // optional: dropped when GITHUB_TOKEN is not set
+  },
   tools: [
     {
       name: "search_repos",

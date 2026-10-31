@@ -22,6 +22,8 @@ test("templates keep types, drop missing optionals, read secrets", () => {
   assert.deepEqual(render({ a: "{x}", b: "k={x}" }, { x: "1" }), { a: "1", b: "k=1" });
   assert.equal(render("Bearer ${TOKEN}", {}, { TOKEN: "t" }), "Bearer t");
   assert.throws(() => render("${NOPE}", {}, {}), /Missing secret/);
+  assert.deepEqual(render({ h: "Bearer ${?NOPE}", k: 1 }, {}, {}), { k: 1 });
+  assert.equal(render("Bearer ${?T}", {}, { T: "x" }), "Bearer x");
 });
 
 test("pick / project", () => {
