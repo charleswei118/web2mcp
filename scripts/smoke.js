@@ -16,6 +16,7 @@ const CASES = {
   reader_read: { url: "https://example.com" },
   npm_package: { name: "@modelcontextprotocol/sdk" },
   npmstats_downloads: { name: "@modelcontextprotocol/sdk" },
+  pypi_package: { name: "requests" },
 };
 
 const remote = process.env.MCP_URL;

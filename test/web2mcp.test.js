@@ -38,6 +38,37 @@ test("all built-in connectors are valid", () => {
   assert.ok(reg.tools.size >= 10);
 });
 
+test("PyPI package reads the info endpoint and returns compact package metadata", async () => {
+  const reg = buildRegistry({});
+  const s = reg.tools.get("pypi_package");
+  const req = buildRequest(s.connector, s.tool, { name: "my package" });
+  assert.equal(req.url, "https://pypi.org/pypi/my%20package/json");
+  assert.throws(() => buildRequest(s.connector, s.tool, {}), /Missing required argument/);
+
+  const fakeFetch = async () => new Response(JSON.stringify({ info: {
+    name: "sample-package",
+    version: "1.2.3",
+    summary: "A sample package",
+    license: "MIT",
+    home_page: "https://example.org",
+    requires_python: ">=3.9",
+    description: "large field should be omitted",
+  }, urls: [{ filename: "sample.whl" }] }), { headers: { "content-type": "application/json" } });
+  const result = await handleRpc({
+    jsonrpc: "2.0", id: 1, method: "tools/call",
+    params: { name: "pypi_package", arguments: { name: "sample-package" } },
+  }, reg, {}, fakeFetch);
+  assert.equal(result.result.isError, false);
+  assert.deepEqual(JSON.parse(result.result.content[0].text), {
+    name: "sample-package",
+    version: "1.2.3",
+    summary: "A sample package",
+    license: "MIT",
+    home_page: "https://example.org",
+    requires_python: ">=3.9",
+  });
+});
+
 test("ENABLED_CONNECTORS and CONNECTORS_JSON", () => {
   const extra = { name: "demo", description: "d", baseUrl: "https://example.com", tools: [{ name: "x", description: "x", path: "/x" }] };
   const reg = buildRegistry({ ENABLED_CONNECTORS: "demo,wikipedia", CONNECTORS_JSON: JSON.stringify([extra]) });
