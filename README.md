@@ -13,6 +13,8 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/charleswei118/web2mcp)
 
+**GitHub's 665 REST endpoints → 2 MCP tools, ~147,000 tokens of tool definitions → ~300** ([catalog mode](#catalog-mode-665-endpoints-2-tools))
+
 </div>
 
 Every AI agent (Claude, ChatGPT, Cursor, your own bots…) now speaks the **Model Context Protocol**. But most websites and apps don't. `web2mcp` is the glue: describe an HTTP API in a few lines of config and it instantly becomes an MCP tool that **any** agent can call — hosted for free on Cloudflare's edge.
@@ -65,6 +67,10 @@ The demo is rate-limited by the free plan and has `reader_read` disabled. Deploy
 | `currency_latest` | ECB exchange rates (Frankfurter) |
 | `github_search_repos`, `github_repo` | Public GitHub repositories (set `GITHUB_TOKEN` on Workers: shared IPs hit GitHub's anonymous limit) |
 | `reader_read` | Any web page → clean Markdown (Jina Reader) |
+
+## Deploy your own in one click
+
+Click **Deploy to Cloudflare** above. Cloudflare copies this repo into your GitHub account, asks for an `AUTH_TOKEN` (any long random string, e.g. `openssl rand -hex 32`), then builds and deploys it. A minute later your server is live at `https://web2mcp.<your-subdomain>.workers.dev/mcp`, and every push to your copy redeploys it. The free Workers plan is enough.
 
 ## Quick start
 
@@ -184,7 +190,7 @@ Supported MCP methods: `initialize`, `ping`, `tools/list`, `tools/call`, plus em
 
 - [x] Catalog mode (`search_api` + `call_api`) — v0.2
 - [ ] Load OpenAPI specs at runtime from a URL
-- [ ] One-click “Deploy to Cloudflare”
+- [x] One-click “Deploy to Cloudflare” — v0.2
 - [ ] HTML scraping connectors (CSS selectors via `HTMLRewriter`)
 - [ ] Per-tool rate limits and KV caching
 - [ ] OAuth for connectors that need user accounts

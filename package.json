@@ -1,6 +1,6 @@
 {
   "name": "web2mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Turn any website or REST API into MCP tools on Cloudflare Workers. Config-driven, zero runtime dependencies.",
   "type": "module",
   "private": true,
@@ -12,6 +12,25 @@
     "deploy": "npx wrangler deploy",
     "smoke": "node scripts/smoke.js"
   },
-  "keywords": ["mcp", "model-context-protocol", "cloudflare-workers", "ai-agents", "api-gateway", "llm-tools"],
-  "engines": { "node": ">=20" }
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "cloudflare-workers",
+    "ai-agents",
+    "api-gateway",
+    "llm-tools"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "cloudflare": {
+    "bindings": {
+      "AUTH_TOKEN": {
+        "description": "Clients must send `Authorization: Bearer <token>` to `/mcp`. Generate one with `openssl rand -hex 32`."
+      },
+      "MAX_OUTPUT_CHARS": {
+        "description": "Max characters returned per tool call. `20000` is a good default."
+      }
+    }
+  }
 }

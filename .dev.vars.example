@@ -1,0 +1,2 @@
+# Secrets for local dev (copy to .dev.vars). The Deploy to Cloudflare button reads this file and asks for each one.
+AUTH_TOKEN=change-me # clients send "Authorization: Bearer <token>" to /mcp

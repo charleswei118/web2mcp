@@ -3,7 +3,7 @@
   "name": "io.github.charleswei118/web2mcp",
   "title": "web2mcp",
   "description": "Zero-dependency Cloudflare Worker gateway turning websites and REST APIs into MCP tools.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repository": {
     "url": "https://github.com/charleswei118/web2mcp",
     "source": "github"
