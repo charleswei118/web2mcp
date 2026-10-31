@@ -16,6 +16,7 @@ const CASES = {
   reader_read: { url: "https://example.com" },
   npm_package: { name: "@modelcontextprotocol/sdk" },
   npmstats_downloads: { name: "@modelcontextprotocol/sdk" },
+  crossref_search: { query: "Model Context Protocol", limit: 2 },
 };
 
 const remote = process.env.MCP_URL;

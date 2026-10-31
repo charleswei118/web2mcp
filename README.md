@@ -68,6 +68,7 @@ The demo is rate-limited by the free plan and has `reader_read` disabled. Deploy
 | `github_search_repos`, `github_repo` | Public GitHub repositories (set `GITHUB_TOKEN` on Workers: shared IPs hit GitHub's anonymous limit) |
 | `reader_read` | Any web page → clean Markdown (Jina Reader) |
 | `npm_package`, `npmstats_downloads` | npm package info and weekly downloads |
+| `crossref_search` | Scholarly works and DOI metadata from Crossref |
 
 ## Deploy your own in one click
 
