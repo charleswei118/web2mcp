@@ -10,7 +10,8 @@
     "test": "node --test test/*.test.js",
     "dev": "npx wrangler dev",
     "deploy": "npx wrangler deploy",
-    "smoke": "node scripts/smoke.js"
+    "smoke": "node scripts/smoke.js",
+    "stdio": "node bin/web2mcp.js"
   },
   "keywords": [
     "mcp",
@@ -32,5 +33,15 @@
         "description": "Max characters returned per tool call. `20000` is a good default."
       }
     }
-  }
+  },
+  "bin": {
+    "web2mcp": "bin/web2mcp.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "connectors",
+    "README.md",
+    "LICENSE"
+  ]
 }

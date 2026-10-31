@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Local stdio transport: `npx github:charleswei118/web2mcp` or `node bin/web2mcp.js`, same connectors and catalog mode as the Worker.
+- Dockerfile for running the stdio server in a container (used by Glama checks).
+
 ## 0.2.0 (2026-10-31)
 
 - **Catalog mode**: expose two tools, `search_api` and `call_api`, instead of one per endpoint. GitHub's full REST spec (665 GET operations) drops from ~147,000 tokens of tool definitions to ~300. Enable per request with `/mcp?mode=catalog` or per deployment with `TOOL_MODE = "catalog"`.
