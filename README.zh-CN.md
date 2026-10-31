@@ -56,6 +56,7 @@ curl -s https://web2mcp.cwei59969.workers.dev/mcp -H 'content-type: application/
 | `github_search_repos` / `github_repo` | GitHub 公开仓库（部署到 Workers 建议设置 `GITHUB_TOKEN`） |
 | `reader_read` | 任意网页转 Markdown |
 | `npm_package` / `npmstats_downloads` | npm 包信息与周下载量 |
+| `crossref_search` | Crossref 学术作品与 DOI 元数据搜索 |
 
 ## 快速开始
 
