@@ -26,7 +26,12 @@ for (const [rawPath, item] of Object.entries(spec.paths || {})) {
     let path = rawPath;
     if (!op || (only && !only.includes(method.toUpperCase()))) continue;
     let tname = slug(op.operationId || `${method}_${path}`);
-    while (seen.has(tname)) tname = (tname + "_x").slice(0, 32);
+    if (seen.has(tname)) {
+      // Names are capped at 32 chars, so make room for a numeric suffix (appending alone could loop forever).
+      let i = 2;
+      while (seen.has(`${tname.slice(0, 31 - String(i).length)}_${i}`)) i++;
+      tname = `${tname.slice(0, 31 - String(i).length)}_${i}`;
+    }
     seen.add(tname);
     const params = {};
     const query = {};

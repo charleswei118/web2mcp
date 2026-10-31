@@ -5,6 +5,8 @@ compatibility_date = "2026-10-01"
 [vars]
 # Comma-separated list to expose only some connectors, e.g. "wikipedia,weather,geocode".
 # ENABLED_CONNECTORS = ""
+# "catalog" exposes two tools (search_api + call_api) instead of one per endpoint.
+# TOOL_MODE = "catalog"
 # Max characters returned per tool call.
 MAX_OUTPUT_CHARS = "20000"
 

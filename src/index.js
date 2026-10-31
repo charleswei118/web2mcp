@@ -6,6 +6,7 @@
 
 import { buildRegistry, listTools } from "./registry.js";
 import { handleRpc, SERVER_INFO } from "./mcp.js";
+import { CATALOG_TOOLS, catalogMode } from "./catalog.js";
 
 const CORS = {
   "access-control-allow-origin": "*",
@@ -42,7 +43,7 @@ function indexPage(registry) {
   return `<!doctype html><meta charset="utf-8"><title>web2mcp</title>
 <style>body{font:15px/1.5 system-ui,sans-serif;max-width:860px;margin:40px auto;padding:0 16px}td{padding:6px 10px;border-bottom:1px solid #eee;vertical-align:top}code{background:#f4f4f4;padding:2px 4px;border-radius:4px}</style>
 <h1>web2mcp <small>v${SERVER_INFO.version}</small></h1>
-<p>MCP endpoint: <code>/mcp</code> (Streamable HTTP). ${registry.connectors.length} connectors, ${registry.tools.size} tools.</p>
+<p>MCP endpoint: <code>/mcp</code> (Streamable HTTP, one tool per operation) or <code>/mcp?mode=catalog</code> (two tools: <code>search_api</code> + <code>call_api</code>). ${registry.connectors.length} connectors, ${registry.tools.size} tools.</p>
 <table>${rows}</table>
 <p><a href="https://github.com/charleswei118/web2mcp">github.com/charleswei118/web2mcp</a></p>`;
 }
@@ -69,7 +70,7 @@ export default {
     if (url.pathname === "/tools" || url.pathname === "/mcp") {
       if (!authorized(request, env)) return json({ error: "Unauthorized" }, 401, { "www-authenticate": "Bearer" });
     }
-    if (url.pathname === "/tools") return json({ tools: listTools(registry) });
+    if (url.pathname === "/tools") return json({ tools: catalogMode(env, url) ? CATALOG_TOOLS : listTools(registry) });
 
     if (url.pathname === "/mcp") {
       if (request.method === "GET") {
@@ -87,7 +88,7 @@ export default {
       }
       const batch = Array.isArray(payload);
       const msgs = batch ? payload : [payload];
-      const results = (await Promise.all(msgs.map((m) => handleRpc(m, registry, env)))).filter(Boolean);
+      const results = (await Promise.all(msgs.map((m) => handleRpc(m, registry, env, fetch, { catalog: catalogMode(env, url) })))).filter(Boolean);
       if (!results.length) return new Response(null, { status: 202, headers: CORS });
       return json(batch ? results : results[0]);
     }
