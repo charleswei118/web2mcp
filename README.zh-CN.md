@@ -100,8 +100,27 @@ Claude Desktop / Cursor 等（通过 `mcp-remote`）：
 node scripts/openapi2connector.js <spec.json 或 URL> 名称 --only GET > connectors/名称.js
 ```
 
+## 目录模式：665 个接口，只占 2 个工具
+
+把每个接口都暴露成一个工具，会塞满模型的上下文。目录模式下 web2mcp 只暴露两个工具：
+
+- `search_api`：按关键词查找可用操作，返回名称和参数说明
+- `call_api`：按名称执行某个操作
+
+用 GitHub 完整 REST OpenAPI（仅 GET 接口，经 `scripts/openapi2connector.js` 转换）实测：
+
+| 模式 | `tools/list` 工具数 | 约占上下文 |
+| --- | --- | --- |
+| 默认（一个接口一个工具） | 665 | 约 147,000 tokens |
+| 目录模式 | 2 | 约 300 tokens |
+
+单次请求用 `/mcp?mode=catalog` 开启，或在部署变量里设 `TOOL_MODE = "catalog"` 全局开启（`?mode=tools` 切回）。演示地址：`https://web2mcp.cwei59969.workers.dev/mcp?mode=catalog`。
+
 ## 路线图
 
+- [x] 目录模式（`search_api` + `call_api`）— v0.2
+- [ ] 运行时从 URL 加载 OpenAPI
+- [ ] 一键部署到 Cloudflare
 - [ ] 基于 CSS 选择器的网页抓取连接器（HTMLRewriter）
 - [ ] 按工具限流与 KV 缓存
 - [ ] 需要登录账号的 OAuth 连接器

@@ -152,11 +152,28 @@ Template rules:
 node scripts/openapi2connector.js https://petstore3.swagger.io/api/v3/openapi.json petstore --only GET > connectors/petstore.js
 ```
 
+## Catalog mode: 665 endpoints, 2 tools
+
+Exposing every endpoint as its own tool floods the model's context. In catalog mode web2mcp exposes just two tools:
+
+- `search_api` — find operations by keywords; returns their names and argument schemas
+- `call_api` — run one operation by name with an arguments object
+
+Measured with GitHub's full REST OpenAPI spec (GET operations only, converted with `scripts/openapi2connector.js`):
+
+| Mode | Tools in `tools/list` | Approx. context |
+| --- | --- | --- |
+| Default (one tool per endpoint) | 665 | ~147,000 tokens |
+| Catalog | 2 | ~300 tokens |
+
+Turn it on per request with `/mcp?mode=catalog`, or for the whole deployment with the variable `TOOL_MODE = "catalog"` (`?mode=tools` switches back). Try it on the demo: `https://web2mcp.cwei59969.workers.dev/mcp?mode=catalog`.
+
 ## Endpoints
 
 | Path | |
 | --- | --- |
 | `POST /mcp` | MCP Streamable HTTP endpoint (JSON responses, batch supported) |
+| `POST /mcp?mode=catalog` | Same, in catalog mode (`search_api` + `call_api`) |
 | `GET /` | Human-readable list of tools |
 | `GET /tools` | Tool list as JSON |
 | `GET /health` | Health check |
@@ -165,6 +182,9 @@ Supported MCP methods: `initialize`, `ping`, `tools/list`, `tools/call`, plus em
 
 ## Roadmap
 
+- [x] Catalog mode (`search_api` + `call_api`) — v0.2
+- [ ] Load OpenAPI specs at runtime from a URL
+- [ ] One-click “Deploy to Cloudflare”
 - [ ] HTML scraping connectors (CSS selectors via `HTMLRewriter`)
 - [ ] Per-tool rate limits and KV caching
 - [ ] OAuth for connectors that need user accounts
