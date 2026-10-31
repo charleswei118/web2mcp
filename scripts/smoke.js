@@ -14,6 +14,8 @@ const CASES = {
   github_search_repos: { query: "model context protocol", limit: 2 },
   github_repo: { owner: "modelcontextprotocol", repo: "servers" },
   reader_read: { url: "https://example.com" },
+  npm_package: { name: "@types/node" },
+  npm_downloads_weekly: { name: "express" },
 };
 
 const remote = process.env.MCP_URL;

@@ -65,6 +65,7 @@ The demo is rate-limited by the free plan and has `reader_read` disabled. Deploy
 | `currency_latest` | ECB exchange rates (Frankfurter) |
 | `github_search_repos`, `github_repo` | Public GitHub repositories (set `GITHUB_TOKEN` on Workers: shared IPs hit GitHub's anonymous limit) |
 | `reader_read` | Any web page → clean Markdown (Jina Reader) |
+| `npm_package`, `npm_downloads_weekly` | npm package info and weekly downloads |
 
 ## Quick start
 
