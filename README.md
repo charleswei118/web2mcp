@@ -64,6 +64,7 @@ The demo is rate-limited by the free plan and has `reader_read` disabled. Deploy
 | `weather_forecast` | Current weather + daily forecast (Open-Meteo) |
 | `currency_latest` | ECB exchange rates (Frankfurter) |
 | `github_search_repos`, `github_repo` | Public GitHub repositories (set `GITHUB_TOKEN` on Workers: shared IPs hit GitHub's anonymous limit) |
+| `openlibrary_search` | Search books by title or author (Open Library) |
 | `reader_read` | Any web page → clean Markdown (Jina Reader) |
 
 ## Quick start
