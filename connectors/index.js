@@ -7,5 +7,7 @@ import weather from "./weather.js";
 import currency from "./currency.js";
 import github from "./github.js";
 import reader from "./reader.js";
+import npm from "./npm.js";
+import npmstats from "./npmstats.js";
 
-export default [wikipedia, hackernews, geocode, weather, currency, github, reader];
+export default [wikipedia, hackernews, geocode, weather, currency, github, reader, npm, npmstats];
