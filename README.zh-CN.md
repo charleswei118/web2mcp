@@ -84,6 +84,22 @@ Claude Desktop / Cursor 等（通过 `mcp-remote`）：
 }
 ```
 
+本地 stdio 运行（无需 Cloudflare 账号，连接器相同）：
+
+```json
+{
+  "mcpServers": {
+    "web2mcp": {
+      "command": "npx",
+      "args": ["-y", "github:charleswei118/web2mcp"],
+      "env": { "ENABLED_CONNECTORS": "wikipedia,hackernews,weather" }
+    }
+  }
+}
+```
+
+或用 Docker：`docker build -t web2mcp . && docker run -i --rm web2mcp`。环境变量与 Worker 绑定一致（`ENABLED_CONNECTORS`、`CONNECTORS_JSON`、`MAX_OUTPUT_CHARS`、`TOOL_MODE=catalog`）。
+
 原生支持远程 MCP 的客户端可直接填 URL。调试可用官方工具：`npx @modelcontextprotocol/inspector`。
 
 ## 编写连接器

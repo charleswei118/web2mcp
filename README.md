@@ -105,6 +105,22 @@ npx wrangler secret put AUTH_TOKEN
 }
 ```
 
+**Run locally over stdio** (no Cloudflare account needed; same connectors):
+
+```json
+{
+  "mcpServers": {
+    "web2mcp": {
+      "command": "npx",
+      "args": ["-y", "github:charleswei118/web2mcp"],
+      "env": { "ENABLED_CONNECTORS": "wikipedia,hackernews,weather" }
+    }
+  }
+}
+```
+
+Or with Docker: `docker build -t web2mcp . && docker run -i --rm web2mcp`. Environment variables work the same as Worker bindings (`ENABLED_CONNECTORS`, `CONNECTORS_JSON`, `MAX_OUTPUT_CHARS`, `TOOL_MODE=catalog`).
+
 Clients that support remote MCP servers natively (Claude.ai custom connectors, ChatGPT connectors, the OpenAI Responses API, Cloudflare AI Playground…) can use the URL directly. Test with the official inspector:
 
 ```bash
