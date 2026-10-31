@@ -8,9 +8,15 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/charleswei118/web2mcp)
 
+**GitHub 665 个 REST 接口 → 2 个 MCP 工具，工具定义从约 14.7 万 token 降到约 300**（见“目录模式”）
+
 </div>
 
 现在的 AI 智能体（Claude、ChatGPT、Cursor、各种自建 Agent）都在用 **MCP（Model Context Protocol）** 调用外部工具，但大多数网站和 APP 并不支持。`web2mcp` 就是中间的“转换插头”：用几行配置描述一个 HTTP 接口，它立刻变成**任何** AI 都能调用的 MCP 工具，并免费托管在 Cloudflare 边缘网络上。这样不同的 AI 就能共用同一套工具，互联互通。
+
+## 一键部署
+
+点上方 **Deploy to Cloudflare**：Cloudflare 会把本仓库复制到你的 GitHub 账号，让你填一个 `AUTH_TOKEN`（任意长随机串，比如 `openssl rand -hex 32` 生成），然后自动构建部署。约一分钟后，你的服务就在 `https://web2mcp.<你的子域>.workers.dev/mcp` 上线，之后每次推送到你的副本都会自动重新部署。Workers 免费套餐就够用。
 
 ## 在线体验
 
@@ -120,7 +126,7 @@ node scripts/openapi2connector.js <spec.json 或 URL> 名称 --only GET > connec
 
 - [x] 目录模式（`search_api` + `call_api`）— v0.2
 - [ ] 运行时从 URL 加载 OpenAPI
-- [ ] 一键部署到 Cloudflare
+- [x] 一键部署到 Cloudflare — v0.2
 - [ ] 基于 CSS 选择器的网页抓取连接器（HTMLRewriter）
 - [ ] 按工具限流与 KV 缓存
 - [ ] 需要登录账号的 OAuth 连接器

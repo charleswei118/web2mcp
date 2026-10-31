@@ -6,7 +6,7 @@ import { execute } from "./executor.js";
 import { CATALOG_TOOLS, searchOperations } from "./catalog.js";
 
 export const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
-export const SERVER_INFO = { name: "web2mcp", title: "web2mcp gateway", version: "0.2.0-dev" };
+export const SERVER_INFO = { name: "web2mcp", title: "web2mcp gateway", version: "0.2.0" };
 
 const err = (id, code, message) => ({ jsonrpc: "2.0", id: id ?? null, error: { code, message } });
 const ok = (id, result) => ({ jsonrpc: "2.0", id, result });
