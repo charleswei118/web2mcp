@@ -24,6 +24,9 @@ export function validateConnector(c) {
     if (typeof t.path !== "string" || !t.path.startsWith("/")) errs.push(`${c.name}.${t.name}: path must start with "/"`);
     const m = (t.method || "GET").toUpperCase();
     if (!["GET", "POST", "PUT", "PATCH", "DELETE"].includes(m)) errs.push(`${c.name}.${t.name}: bad method ${m}`);
+    if (t.response !== undefined && !["auto", "json", "xml", "text"].includes(t.response)) {
+      errs.push(`${c.name}.${t.name}: response must be "auto", "json", "xml" or "text"`);
+    }
   }
   return errs;
 }

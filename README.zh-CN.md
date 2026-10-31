@@ -114,6 +114,7 @@ Claude Desktop / Cursor 等（通过 `mcp-remote`）：
 | `"${?SECRET}"` | 可选密钥，未设置时整项省略 |
 | `pick: "a.b.*.c"` | 选取响应的一部分，`*` 遍历数组 |
 | `fields: ["x", "别名=深层.路径"]` | 只保留这些字段 |
+| `response: "xml"` | 先把 XML/Atom/RSS 响应转成 JSON，再用 `pick` / `fields` 筛选（属性变成 `@名称`，去掉命名空间前缀，重复元素变数组）。可选 `"json"`、`"text"`（原文）、`"auto"`（默认）。 |
 
 **不改代码也能加**：把连接器 JSON 数组放进 `CONNECTORS_JSON` 密钥即可；用 `ENABLED_CONNECTORS` 只开放部分连接器。
 

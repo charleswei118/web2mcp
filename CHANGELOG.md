@@ -4,6 +4,8 @@
 
 - Local stdio transport: `npx github:charleswei118/web2mcp` or `node bin/web2mcp.js`, same connectors and catalog mode as the Worker.
 - Dockerfile for running the stdio server in a container (used by Glama checks).
+- `response: "xml"` for connectors: XML/Atom/RSS responses are converted to JSON (built-in, zero dependencies) so `pick` / `fields` / `limit` work on them, including in `CONNECTORS_JSON`. Also `response: "json"` / `"text"` to force a mode.
+- `pick`: `*` now treats a single value as a one-item list.
 
 ## 0.2.0 (2026-10-31)
 
