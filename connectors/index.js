@@ -8,6 +8,6 @@ import currency from "./currency.js";
 import github from "./github.js";
 import reader from "./reader.js";
 import npm from "./npm.js";
-import npmDownloads from "./npm-downloads.js";
+import npmstats from "./npmstats.js";
 
-export default [wikipedia, hackernews, geocode, weather, currency, github, reader, npm, npmDownloads];
+export default [wikipedia, hackernews, geocode, weather, currency, github, reader, npm, npmstats];

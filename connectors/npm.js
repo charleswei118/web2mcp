@@ -1,7 +1,7 @@
 export default {
   name: "npm",
   title: "npm",
-  description: "Package info from the public npm registry. Weekly downloads are in the npm_downloads connector.",
+  description: "Package info from the public npm registry. Weekly downloads are in the npmstats connector.",
   baseUrl: "https://registry.npmjs.org",
   tools: [
     {
