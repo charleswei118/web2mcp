@@ -6,7 +6,7 @@ export default {
   tools: [
     {
       name: "forecast",
-      description: "Current conditions plus a daily forecast (max/min temperature, precipitation, weather code).",
+      description: "Get current conditions and a daily forecast for a location given by coordinates. If you only have a place name, call geocode_search first. Returns temperature (°C), humidity, wind (km/h), WMO weather code, and per-day max/min temperature and precipitation (mm) in the location's local timezone.",
       path: "/v1/forecast",
       query: {
         latitude: "{latitude}",
@@ -17,9 +17,9 @@ export default {
         timezone: "auto",
       },
       params: {
-        latitude: { type: "number", required: true, minimum: -90, maximum: 90 },
-        longitude: { type: "number", required: true, minimum: -180, maximum: 180 },
-        days: { type: "integer", minimum: 1, maximum: 16, default: 3 },
+        latitude: { type: "number", required: true, minimum: -90, maximum: 90, description: "Latitude in decimal degrees, e.g. 31.23" },
+        longitude: { type: "number", required: true, minimum: -180, maximum: 180, description: "Longitude in decimal degrees, e.g. 121.47" },
+        days: { type: "integer", minimum: 1, maximum: 16, default: 3, description: "Number of forecast days including today (1-16)" },
       },
       fields: ["timezone", "current", "current_units", "daily", "daily_units"],
     },

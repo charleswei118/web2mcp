@@ -8,7 +8,7 @@ export default {
   tools: [
     {
       name: "downloads",
-      description: "Number of downloads of an npm package in the last 7 days.",
+      description: "Get how many times an npm package was downloaded in the last 7 days, as a popularity signal. For version or license info use npm_package instead. Returns package, downloads, start and end dates.",
       path: "/downloads/point/last-week/{name}",
       params: {
         name: { type: "string", required: true, description: "Package name, e.g. 'express' or '@types/node'" },

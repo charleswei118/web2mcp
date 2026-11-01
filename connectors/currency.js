@@ -6,7 +6,7 @@ export default {
   tools: [
     {
       name: "latest",
-      description: "Latest exchange rates from a base currency.",
+      description: "Get the latest European Central Bank reference exchange rates (updated once per working day) from a base currency. Omit symbols to get all ~30 currencies. Returns an object with base, date and a rates map, e.g. rates.CNY.",
       path: "/v1/latest",
       query: { base: "{base}", symbols: "{symbols}" },
       params: {
