@@ -1,5 +1,6 @@
 import { render, renderPath, pick, project, OMIT } from "./template.js";
 import { xmlToJson } from "./xml.js";
+import { checkPublicUrl } from "./urlguard.js";
 
 const DEFAULT_TIMEOUT_MS = 15000;
 const DEFAULT_MAX_CHARS = 20000;
@@ -28,6 +29,13 @@ export function checkArgs(tool, args = {}) {
       if (p.enum && !p.enum.includes(v)) throw new Error(`Argument ${name} must be one of: ${p.enum.join(", ")}`);
       if (p.pattern && !new RegExp(p.pattern).test(v)) throw new Error(`Argument ${name} must match ${p.pattern}`);
       if (p.maxLength && v.length > p.maxLength) throw new Error(`Argument ${name} is too long`);
+      if (p.format === "public-url") {
+        try {
+          checkPublicUrl(v);
+        } catch (e) {
+          throw new Error(`Argument ${name}: ${e.message}`);
+        }
+      }
     }
     clean[name] = v;
   }
