@@ -57,6 +57,10 @@ curl -s https://web2mcp.cwei59969.workers.dev/mcp -H 'content-type: application/
 | `reader_read` | 任意网页转 Markdown |
 | `npm_package` / `npmstats_downloads` | npm 包信息与周下载量 |
 | `arxiv_search` | 搜索 arXiv 论文 |
+| `holidaycn_year` | 中国法定节假日与调休上班日（按年） |
+| `baiduhot_realtime` | 百度实时热搜榜 |
+| `shici_random` | 随机一句古诗词（今日诗词，可按主题） |
+| `bilibili_popular`, `bilibili_ranking` | B 站综合热门 / 排行榜（仅本地 stdio 或自建服务器可用，B 站屏蔽 Cloudflare IP） |
 
 ## 快速开始
 
