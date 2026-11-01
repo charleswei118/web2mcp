@@ -6,7 +6,7 @@ export default {
   tools: [
     {
       name: "search",
-      description: "Search arXiv papers by keyword. Returns title, authors, date, summary and link.",
+      description: "Search arXiv research papers by keyword across title, abstract and authors, ranked by relevance. Use it for academic preprints; use wikipedia_search for general background. Returns id/link, title, publication date, authors and abstract.",
       path: "/api/query",
       query: { search_query: "all:{query}", max_results: "{limit}" },
       params: {

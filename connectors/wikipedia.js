@@ -6,7 +6,7 @@ export default {
   tools: [
     {
       name: "search",
-      description: "Full-text search of Wikipedia. Returns titles, short descriptions and excerpts.",
+      description: "Full-text search of English Wikipedia. Use this to find the right article title, then call wikipedia_summary with it. Returns titles, short descriptions and excerpts, best match first.",
       path: "/w/rest.php/v1/search/page",
       query: { q: "{query}", limit: "{limit}" },
       params: {
@@ -18,7 +18,7 @@ export default {
     },
     {
       name: "summary",
-      description: "Get the lead summary of a Wikipedia article by exact title.",
+      description: "Get the lead summary of an English Wikipedia article by its exact title (redirects are followed). If you are unsure of the title, use wikipedia_search first. Returns title, short description, the lead extract and the article url.",
       path: "/api/rest_v1/page/summary/{title}",
       params: { title: { type: "string", description: "Exact article title, e.g. 'Cloudflare'", required: true } },
       fields: ["title", "description", "extract", "url=content_urls.desktop.page"],

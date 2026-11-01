@@ -6,7 +6,7 @@ export default {
   tools: [
     {
       name: "package",
-      description: "Get the latest version, description, license and homepage of an npm package.",
+      description: "Get the latest version, description, license and homepage of an npm package. For download counts use npmstats_downloads instead. Returns an error if the package does not exist.",
       path: "/{name}/latest",
       params: {
         name: { type: "string", required: true, description: "Package name, e.g. 'express' or '@types/node'" },

@@ -6,12 +6,12 @@ export default {
   tools: [
     {
       name: "search",
-      description: "Look up a city or place and get its coordinates, country and timezone.",
+      description: "Turn a city or place name into coordinates. Use this before weather_forecast, which needs latitude/longitude. A name can match several places, so up to `limit` candidates are returned, best match first, each with name, country, region, latitude, longitude and timezone.",
       path: "/v1/search",
       query: { name: "{name}", count: "{limit}", language: "{language}" },
       params: {
         name: { type: "string", description: "Place name, e.g. 'Shanghai'", required: true },
-        limit: { type: "integer", minimum: 1, maximum: 10, default: 3 },
+        limit: { type: "integer", minimum: 1, maximum: 10, default: 3, description: "Max candidate places to return (1-10)" },
         language: { type: "string", description: "Result language, e.g. en, zh", default: "en" },
       },
       pick: "results",
