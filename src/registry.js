@@ -38,6 +38,7 @@ export function toInputSchema(params = {}) {
   for (const [name, p] of Object.entries(params)) {
     const { required: req, ...schema } = p;
     properties[name] = { type: "string", ...schema };
+    if (schema.format === "public-url") properties[name].format = "uri";
     if (req) required.push(name);
   }
   return { type: "object", properties, required, additionalProperties: false };
