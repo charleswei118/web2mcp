@@ -17,5 +17,6 @@ import bilibili from "./bilibili.js";
 import nager from "./nager.js";
 import crossref from "./crossref.js";
 import openlibrary from "./openlibrary.js";
+import datamuse from "./datamuse.js";
 
-export default [wikipedia, hackernews, geocode, weather, currency, github, reader, npm, npmstats, arxiv, holidaycn, baiduhot, shici, bilibili, nager, crossref, openlibrary];
+export default [wikipedia, hackernews, geocode, weather, currency, github, reader, npm, npmstats, arxiv, holidaycn, baiduhot, shici, bilibili, nager, crossref, openlibrary, datamuse];

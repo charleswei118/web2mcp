@@ -18,6 +18,7 @@ const CASES = {
   npmstats_downloads: { name: "@modelcontextprotocol/sdk" },
   arxiv_search: { query: "model context protocol", limit: 2 },
   holidays_list: { year: 2026, country: "US" },
+  datamuse_words: { meaning: "ringing in the ears", limit: 3 },
 };
 
 const remote = process.env.MCP_URL;
