@@ -88,6 +88,21 @@ test("tools/call with mocked upstream shapes the output", async () => {
   assert.equal(err.result.isError, true);
 });
 
+test("datamuse_words maps meaning and limit, keeps word and score", async () => {
+  const reg = buildRegistry({});
+  const d = reg.tools.get("datamuse_words");
+  assert.equal(buildRequest(d.connector, d.tool, { meaning: "ringing in the ears", limit: 5 }).url,
+    "https://api.datamuse.com/words?ml=ringing+in+the+ears&max=5");
+  assert.throws(() => buildRequest(d.connector, d.tool, {}), /Missing required/);
+  const fakeFetch = async () =>
+    new Response(JSON.stringify([{ word: "tinnitus", score: 10141200, tags: ["syn", "n"] }]), {
+      headers: { "content-type": "application/json" },
+    });
+  const res = await handleRpc({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "datamuse_words", arguments: { meaning: "ringing in the ears" } } }, reg, {}, fakeFetch);
+  assert.equal(res.result.isError, false);
+  assert.deepEqual(JSON.parse(res.result.content[0].text), [{ word: "tinnitus", score: 10141200 }]);
+});
+
 test("AUTH_TOKEN protects /mcp", async () => {
   const env = { AUTH_TOKEN: "s3cret" };
   assert.equal((await rpc({ jsonrpc: "2.0", id: 1, method: "ping" }, env)).status, 401);
