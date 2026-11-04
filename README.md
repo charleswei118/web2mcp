@@ -69,6 +69,7 @@ The demo is rate-limited by the free plan and has `reader_read` disabled. Deploy
 | `reader_read` | Any web page → clean Markdown (Jina Reader) |
 | `npm_package`, `npmstats_downloads` | npm package info and weekly downloads |
 | `arxiv_search` | Search arXiv research papers |
+| `wikidata_search` | Wikidata entity search: names to stable IDs |
 | `holidaycn_year` | Mainland China holidays and make-up workdays (调休) for a year |
 | `baiduhot_realtime` | Baidu real-time hot search (百度热搜) |
 | `shici_random` | A random line of classical Chinese poetry (今日诗词) |
