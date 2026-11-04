@@ -80,6 +80,7 @@ npx -y @modelcontextprotocol/inspector --cli https://web2mcp.cwei59969.workers.d
 | `arxiv_search` | 搜索 arXiv 论文 |
 | `holidays_list` | 各国法定节假日（按国家和年份，Nager.Date） |
 | `datamuse_words` | 按释义查英文单词（Datamuse） |
+| `wikidata_search` | Wikidata 实体搜索：名称对应稳定 ID |
 | `holidaycn_year` | 中国法定节假日与调休上班日（按年） |
 | `baiduhot_realtime` | 百度实时热搜榜 |
 | `shici_random` | 随机一句古诗词（今日诗词，可按主题） |
