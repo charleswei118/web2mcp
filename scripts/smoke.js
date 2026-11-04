@@ -6,6 +6,7 @@ import worker from "../src/index.js";
 const CASES = {
   wikipedia_search: { query: "Model Context Protocol", limit: 2 },
   wikipedia_summary: { title: "Cloudflare" },
+  wikidata_search: { query: "Ada Lovelace", limit: 2 },
   hackernews_front_page: { limit: 3 },
   hackernews_search: { query: "MCP", limit: 2 },
   geocode_search: { name: "Shanghai", limit: 1 },

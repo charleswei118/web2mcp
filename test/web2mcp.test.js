@@ -88,6 +88,25 @@ test("tools/call with mocked upstream shapes the output", async () => {
   assert.equal(err.result.isError, true);
 });
 
+test("wikidata_search builds the wbsearchentities URL and keeps id, label, description", async () => {
+  const reg = buildRegistry({});
+  const w = reg.tools.get("wikidata_search");
+  const url = new URL(buildRequest(w.connector, w.tool, { query: "Ada Lovelace" }).url);
+  assert.equal(url.origin + url.pathname, "https://www.wikidata.org/w/api.php");
+  assert.equal(url.searchParams.get("action"), "wbsearchentities");
+  assert.equal(url.searchParams.get("search"), "Ada Lovelace");
+  assert.equal(url.searchParams.get("language"), "en");
+  assert.equal(url.searchParams.get("limit"), "5");
+  assert.throws(() => buildRequest(w.connector, w.tool, { query: "x", language: "EN" }), /must match/);
+  const fakeFetch = async () =>
+    new Response(JSON.stringify({ search: [{ id: "Q7259", label: "Ada Lovelace", description: "English mathematician", concepturi: "x" }] }), {
+      headers: { "content-type": "application/json" },
+    });
+  const res = await handleRpc({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "wikidata_search", arguments: { query: "Ada Lovelace" } } }, reg, {}, fakeFetch);
+  assert.equal(res.result.isError, false);
+  assert.deepEqual(JSON.parse(res.result.content[0].text), [{ id: "Q7259", label: "Ada Lovelace", description: "English mathematician" }]);
+});
+
 test("AUTH_TOKEN protects /mcp", async () => {
   const env = { AUTH_TOKEN: "s3cret" };
   assert.equal((await rpc({ jsonrpc: "2.0", id: 1, method: "ping" }, env)).status, 401);
