@@ -88,6 +88,21 @@ test("tools/call with mocked upstream shapes the output", async () => {
   assert.equal(err.result.isError, true);
 });
 
+test("holidays_list builds the Nager.Date URL and keeps date, name, localName", async () => {
+  const reg = buildRegistry({});
+  const h = reg.tools.get("holidays_list");
+  assert.equal(buildRequest(h.connector, h.tool, { year: 2026, country: "TR" }).url,
+    "https://date.nager.at/api/v3/PublicHolidays/2026/TR");
+  assert.throws(() => buildRequest(h.connector, h.tool, { year: 2026, country: "tr" }), /must match/);
+  const fakeFetch = async () =>
+    new Response(JSON.stringify([{ date: "2026-01-01", localName: "Yılbaşı", name: "New Year's Day", countryCode: "TR", types: ["Public"] }]), {
+      headers: { "content-type": "application/json" },
+    });
+  const res = await handleRpc({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "holidays_list", arguments: { year: 2026, country: "TR" } } }, reg, {}, fakeFetch);
+  assert.equal(res.result.isError, false);
+  assert.deepEqual(JSON.parse(res.result.content[0].text), [{ date: "2026-01-01", name: "New Year's Day", localName: "Yılbaşı" }]);
+});
+
 test("AUTH_TOKEN protects /mcp", async () => {
   const env = { AUTH_TOKEN: "s3cret" };
   assert.equal((await rpc({ jsonrpc: "2.0", id: 1, method: "ping" }, env)).status, 401);

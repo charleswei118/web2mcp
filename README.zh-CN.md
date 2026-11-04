@@ -57,6 +57,7 @@ curl -s https://web2mcp.cwei59969.workers.dev/mcp -H 'content-type: application/
 | `reader_read` | 任意网页转 Markdown |
 | `npm_package` / `npmstats_downloads` | npm 包信息与周下载量 |
 | `arxiv_search` | 搜索 arXiv 论文 |
+| `holidays_list` | 各国法定节假日（按国家和年份，Nager.Date） |
 | `holidaycn_year` | 中国法定节假日与调休上班日（按年） |
 | `baiduhot_realtime` | 百度实时热搜榜 |
 | `shici_random` | 随机一句古诗词（今日诗词，可按主题） |

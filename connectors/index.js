@@ -14,5 +14,6 @@ import holidaycn from "./holidaycn.js";
 import baiduhot from "./baiduhot.js";
 import shici from "./shici.js";
 import bilibili from "./bilibili.js";
+import nager from "./nager.js";
 
-export default [wikipedia, hackernews, geocode, weather, currency, github, reader, npm, npmstats, arxiv, holidaycn, baiduhot, shici, bilibili];
+export default [wikipedia, hackernews, geocode, weather, currency, github, reader, npm, npmstats, arxiv, holidaycn, baiduhot, shici, bilibili, nager];
