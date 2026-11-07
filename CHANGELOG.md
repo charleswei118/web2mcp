@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Chinese connectors: `holidaycn` (mainland holidays and 调休 make-up workdays), `baiduhot`, `shici`, `bilibili` (#20).
+- Nager.Date connector: `holidays_list`, public holidays for 100+ countries (#21).
+- `reader`: SSRF guard rejecting localhost, private and metadata addresses (`format: "public-url"`) (#19).
+- Docs: 30-second demo walkthrough with Inspector CLI, "Who is this for", per-client configs (Claude Code, Cursor, VS Code, mcp-remote), local auth note, Troubleshooting table.
 - Local stdio transport: `npx github:charleswei118/web2mcp` or `node bin/web2mcp.js`, same connectors and catalog mode as the Worker.
 - Dockerfile for running the stdio server in a container (used by Glama checks).
 - `response: "xml"` for connectors: XML/Atom/RSS responses are converted to JSON (built-in, zero dependencies) so `pick` / `fields` / `limit` work on them, including in `CONNECTORS_JSON`. Also `response: "json"` / `"text"` to force a mode.

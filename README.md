@@ -30,27 +30,57 @@ Every AI agent (Claude, ChatGPT, Cursor, your own bots…) now speaks the **Mode
    Wikipedia  GitHub  any REST API / web page …
 ```
 
-## Try it now
+## Try it in 30 seconds
 
-A public demo is running at **https://web2mcp.cwei59969.workers.dev** (tool list) with the MCP endpoint at:
+No install, no account. A public demo runs at:
 
 ```
 https://web2mcp.cwei59969.workers.dev/mcp
 ```
 
-Paste it into any client that supports remote MCP servers, or:
+**1. List the tools** with the official MCP Inspector (CLI mode, works over SSH):
 
 ```bash
-curl -s https://web2mcp.cwei59969.workers.dev/mcp -H 'content-type: application/json' \
+npx -y @modelcontextprotocol/inspector --cli https://web2mcp.cwei59969.workers.dev/mcp \
+  --transport http --method tools/list
+```
+
+**2. Call one:**
+
+```bash
+npx -y @modelcontextprotocol/inspector --cli https://web2mcp.cwei59969.workers.dev/mcp \
+  --transport http --method tools/call --tool-name wikipedia_summary --tool-arg title=Cloudflare
+```
+
+Or with plain curl:
+
+```bash
+curl -s https://web2mcp.cwei59969.workers.dev/mcp \
+  -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"weather_forecast","arguments":{"latitude":35.68,"longitude":139.69}}}'
 ```
 
-The demo is rate-limited by the free plan and has `reader_read` disabled. Deploy your own for real use.
+Prefer a UI? Run `npx @modelcontextprotocol/inspector`, pick **Streamable HTTP**, paste the URL.
+
+> The demo runs on the Workers free plan: it is rate-limited, `reader_read` is disabled,
+> `bilibili_*` is not available (Bilibili blocks Cloudflare IPs), and the `github_*` tools
+> often hit GitHub's anonymous rate limit (HTTP 403). Deploy your own, or run it locally, for real use.
+
+## Who is this for
+
+- **You want an agent to use a public REST API today** and don't want to write an MCP server for it.
+  Describe the endpoint in ~15 lines of config; web2mcp turns it into a typed MCP tool.
+- **You have a big API (hundreds of endpoints)** and tool definitions are eating your context.
+  Catalog mode exposes it as 2 tools (`search_api` + `call_api`).
+- **You want free, always-on hosting** with no servers: one Cloudflare Worker, zero runtime dependencies.
+- **You want to run it locally** with no cloud account: `npx -y github:charleswei118/web2mcp` (stdio).
+
+Not a fit if you need browser automation / logged-in scraping, or OAuth on behalf of end users.
 
 ## Why
 
 - **Config, not code.** A connector is a plain object: base URL, path, query, params. No SDK to learn.
-- **Zero runtime dependencies.** ~500 lines of readable JavaScript. Audit it in 10 minutes.
+- **Zero runtime dependencies.** ~800 lines of readable JavaScript. Audit it in 10 minutes.
 - **Token-friendly output.** `pick` and `fields` trim giant JSON responses down to what the model needs.
 - **Free hosting.** Runs on the Cloudflare Workers free plan. Deploy in one click.
 - **Safe by default.** Requests are locked to each connector's host, arguments are type-checked, secrets stay server-side, optional bearer auth.
@@ -84,35 +114,75 @@ Click **Deploy to Cloudflare** above. Cloudflare copies this repo into your GitH
 ```bash
 git clone https://github.com/charleswei118/web2mcp && cd web2mcp
 npm test                 # unit tests, no install needed (Node 20+)
-npm run smoke            # calls every built-in tool against the real APIs
-npx wrangler dev         # local server at http://localhost:8787/mcp
+npm run smoke            # calls the built-in tools against the real APIs
+npx wrangler dev         # local server at http://localhost:8787/mcp (no Cloudflare login needed)
 npx wrangler deploy      # your own https://web2mcp.<you>.workers.dev/mcp
 ```
 
-Optional: protect your endpoint
+`wrangler dev` serves `/mcp` **without auth** unless you create `.dev.vars`: `cp .dev.vars.example .dev.vars` and set `AUTH_TOKEN`.
+
+Optional: protect your deployed endpoint
 
 ```bash
 npx wrangler secret put AUTH_TOKEN
 ```
 
-## Connect an AI client
+## Connect your client
 
-**Claude Desktop / Cursor / Windsurf** (via `mcp-remote`):
+Use the demo URL to try it; swap in `https://web2mcp.<you>.workers.dev/mcp` once you deploy.
+The demo needs **no token**. Add the `Authorization` header only if you set `AUTH_TOKEN` on your own deployment.
+
+**Claude Code**
+
+```bash
+claude mcp add --transport http web2mcp https://web2mcp.cwei59969.workers.dev/mcp
+# your own, protected deployment:
+claude mcp add --transport http web2mcp https://web2mcp.<you>.workers.dev/mcp \
+  --header "Authorization: Bearer $WEB2MCP_TOKEN"
+```
+
+**Cursor** (`~/.cursor/mcp.json`, remote URL supported natively)
+
+```json
+{
+  "mcpServers": {
+    "web2mcp": { "url": "https://web2mcp.cwei59969.workers.dev/mcp" }
+  }
+}
+```
+
+**VS Code** (`.vscode/mcp.json`)
+
+```json
+{
+  "servers": {
+    "web2mcp": { "type": "http", "url": "https://web2mcp.cwei59969.workers.dev/mcp" }
+  }
+}
+```
+
+**Claude Desktop / Windsurf / any stdio-only client** (bridge with `mcp-remote`)
 
 ```json
 {
   "mcpServers": {
     "web2mcp": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://web2mcp.<you>.workers.dev/mcp",
-               "--header", "Authorization: Bearer ${WEB2MCP_TOKEN}"],
-      "env": { "WEB2MCP_TOKEN": "your-token" }
+      "args": ["-y", "mcp-remote", "https://web2mcp.cwei59969.workers.dev/mcp"]
     }
   }
 }
 ```
 
-**Run locally over stdio** (no Cloudflare account needed; same connectors):
+With a protected deployment, add the header:
+
+```json
+"args": ["-y", "mcp-remote", "https://web2mcp.<you>.workers.dev/mcp",
+         "--header", "Authorization: Bearer ${WEB2MCP_TOKEN}"],
+"env": { "WEB2MCP_TOKEN": "your-token" }
+```
+
+**No cloud at all: run it locally over stdio**
 
 ```json
 {
@@ -128,11 +198,7 @@ npx wrangler secret put AUTH_TOKEN
 
 Or with Docker: `docker build -t web2mcp . && docker run -i --rm web2mcp`. Environment variables work the same as Worker bindings (`ENABLED_CONNECTORS`, `CONNECTORS_JSON`, `MAX_OUTPUT_CHARS`, `TOOL_MODE=catalog`).
 
-Clients that support remote MCP servers natively (Claude.ai custom connectors, ChatGPT connectors, the OpenAI Responses API, Cloudflare AI Playground…) can use the URL directly. Test with the official inspector:
-
-```bash
-npx @modelcontextprotocol/inspector   # transport: Streamable HTTP, URL: .../mcp
-```
+**Claude.ai / ChatGPT connectors / OpenAI Responses API / Cloudflare AI Playground:** paste the URL directly.
 
 ## Write a connector
 
@@ -223,6 +289,21 @@ Supported MCP methods: `initialize`, `ping`, `tools/list`, `tools/call`, plus em
 - [ ] Agent-to-agent (A2A) chat rooms on Durable Objects
 
 PRs with new connectors are very welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Troubleshooting
+
+| You see | Why | Fix |
+| --- | --- | --- |
+| `{"error":"Use POST for MCP requests"}` (HTTP 405) | You opened `/mcp` in a browser or sent GET | MCP clients POST to `/mcp`. Open `/` for the human-readable tool list. |
+| HTTP 401 on `/mcp` | `AUTH_TOKEN` is set on the deployment | Send `Authorization: Bearer <token>` (see client configs above). |
+| `Upstream 403 Forbidden: API rate limit exceeded` from `github_*` | GitHub's anonymous limit, shared by all Cloudflare IPs | `npx wrangler secret put GITHUB_TOKEN` on your deployment, or run locally. |
+| `Unknown tool: <name>` (JSON-RPC -32602) | Tool not enabled (`ENABLED_CONNECTORS`), disabled on the demo, or the name is wrong | Run `tools/list` first; check `ENABLED_CONNECTORS`. |
+| `bilibili_*` fails on Workers | Bilibili blocks Cloudflare IPs | Use stdio / Docker / self-hosted Node. |
+| `reader_read` missing on the demo | Disabled on the public demo to prevent abuse | Deploy your own. |
+| `reader_read` rejects a URL | SSRF guard: localhost, private IPs, metadata hosts and odd ports are refused | Use a public `http(s)` URL. |
+| Response cut off | `MAX_OUTPUT_CHARS` (default 20000) | Raise it, or use `pick` / `fields` in the connector. |
+| wrangler: `Proxy environment variables detected` | You're behind `HTTP(S)_PROXY` | Harmless; wrangler uses the proxy for upstream fetches. |
+| `npm test` syntax errors | Node < 20 | Upgrade to Node 20+. |
 
 ## Responsible use
 

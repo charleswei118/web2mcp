@@ -18,27 +18,46 @@
 
 点上方 **Deploy to Cloudflare**：Cloudflare 会把本仓库复制到你的 GitHub 账号，让你填一个 `AUTH_TOKEN`（任意长随机串，比如 `openssl rand -hex 32` 生成），然后自动构建部署。约一分钟后，你的服务就在 `https://web2mcp.<你的子域>.workers.dev/mcp` 上线，之后每次推送到你的副本都会自动重新部署。Workers 免费套餐就够用。
 
-## 在线体验
+## 30 秒试用
 
-演示地址：**https://web2mcp.cwei59969.workers.dev**（工具列表），MCP 端点：
+无需安装、无需账号。公共演示端点：
 
 ```
 https://web2mcp.cwei59969.workers.dev/mcp
 ```
 
-填进任何支持远程 MCP 的客户端即可，或直接用 curl：
+**1. 查看工具列表**（官方 MCP Inspector 命令行模式，SSH/无桌面也能用）：
 
 ```bash
-curl -s https://web2mcp.cwei59969.workers.dev/mcp -H 'content-type: application/json' \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"weather_forecast","arguments":{"latitude":31.23,"longitude":121.47}}}'
+npx -y @modelcontextprotocol/inspector --cli https://web2mcp.cwei59969.workers.dev/mcp \
+  --transport http --method tools/list
 ```
 
-演示版受免费额度限制，且关闭了 `reader_read`，正式使用请自行部署。
+**2. 调一个工具：**
+
+```bash
+npx -y @modelcontextprotocol/inspector --cli https://web2mcp.cwei59969.workers.dev/mcp \
+  --transport http --method tools/call --tool-name holidaycn_year --tool-arg year=2026
+```
+
+想要图形界面：运行 `npx @modelcontextprotocol/inspector`，传输方式选 **Streamable HTTP**，粘贴上面的 URL。
+
+> 演示跑在 Workers 免费版上：有限流；`reader_read` 已关闭；`bilibili_*` 不可用（B 站屏蔽 Cloudflare IP）；
+> `github_*` 经常触发 GitHub 匿名限流（HTTP 403）。正式使用请自部署或本地运行。
+
+## 适合谁
+
+- **想让 AI 马上用上某个公开 REST API**，又不想为它单独写一个 MCP 服务器：约 15 行配置就变成带类型校验的 MCP 工具。
+- **API 很大（几百个接口）**，工具定义把上下文撑爆：目录模式只暴露 2 个工具（`search_api` + `call_api`）。
+- **想要免费、常在线、零运维**：一个 Cloudflare Worker，零运行时依赖。
+- **不想用云**：`npx -y github:charleswei118/web2mcp` 本地 stdio 运行。
+
+不适合：需要浏览器自动化/登录态抓取，或代最终用户做 OAuth。
 
 ## 特点
 
 - **写配置，不写代码**：一个连接器就是一个普通对象（地址、路径、参数）。
-- **零运行时依赖**：约 500 行可读的 JavaScript，十分钟就能审完。
+- **零运行时依赖**：约 800 行可读的 JavaScript，十分钟就能审完。
 - **省 Token**：`pick`、`fields` 把庞大的 JSON 裁剪成模型真正需要的字段。
 - **免费托管**：Cloudflare Workers 免费套餐即可运行，一键部署。
 - **默认安全**：请求锁定在连接器声明的域名内，参数做类型校验，密钥只存在服务端，可开启 Bearer 鉴权。
@@ -68,28 +87,48 @@ curl -s https://web2mcp.cwei59969.workers.dev/mcp -H 'content-type: application/
 ```bash
 git clone https://github.com/charleswei118/web2mcp && cd web2mcp
 npm test            # 单元测试（Node 20+，无需安装依赖）
-npm run smoke       # 真实调用所有内置工具
+npm run smoke       # 真实调用内置工具
 npx wrangler dev    # 本地运行：http://localhost:8787/mcp
 npx wrangler deploy # 部署到 https://web2mcp.<你的子域>.workers.dev/mcp
-npx wrangler secret put AUTH_TOKEN   # 可选：开启鉴权
+npx wrangler secret put AUTH_TOKEN   # 可选：给已部署的服务开启鉴权
 ```
 
-## 接入 AI 客户端
+注意：`wrangler dev` 本地默认**不鉴权**；需要的话 `cp .dev.vars.example .dev.vars` 并设置 `AUTH_TOKEN`。
 
-Claude Desktop / Cursor 等（通过 `mcp-remote`）：
+## 接入客户端
+
+先用演示 URL 试用；自部署后换成 `https://web2mcp.<你的子域>.workers.dev/mcp`。
+演示**不需要 token**；只有你给自己的部署设置了 `AUTH_TOKEN` 时才加 `Authorization` 头。
+
+**Claude Code**
+
+```bash
+claude mcp add --transport http web2mcp https://web2mcp.cwei59969.workers.dev/mcp
+```
+
+**Cursor**（`~/.cursor/mcp.json`，原生支持远程 URL）
+
+```json
+{ "mcpServers": { "web2mcp": { "url": "https://web2mcp.cwei59969.workers.dev/mcp" } } }
+```
+
+**VS Code**（`.vscode/mcp.json`）
+
+```json
+{ "servers": { "web2mcp": { "type": "http", "url": "https://web2mcp.cwei59969.workers.dev/mcp" } } }
+```
+
+**Claude Desktop / Windsurf 等只支持 stdio 的客户端**（用 `mcp-remote` 桥接）
 
 ```json
 {
   "mcpServers": {
-    "web2mcp": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://web2mcp.<你的子域>.workers.dev/mcp",
-               "--header", "Authorization: Bearer ${WEB2MCP_TOKEN}"],
-      "env": { "WEB2MCP_TOKEN": "你的令牌" }
-    }
+    "web2mcp": { "command": "npx", "args": ["-y", "mcp-remote", "https://web2mcp.cwei59969.workers.dev/mcp"] }
   }
 }
 ```
+
+自部署且开启鉴权时，在 `args` 末尾加 `"--header", "Authorization: Bearer ${WEB2MCP_TOKEN}"`，并在 `env` 里设置 `WEB2MCP_TOKEN`。
 
 本地 stdio 运行（无需 Cloudflare 账号，连接器相同）：
 
@@ -107,7 +146,7 @@ Claude Desktop / Cursor 等（通过 `mcp-remote`）：
 
 或用 Docker：`docker build -t web2mcp . && docker run -i --rm web2mcp`。环境变量与 Worker 绑定一致（`ENABLED_CONNECTORS`、`CONNECTORS_JSON`、`MAX_OUTPUT_CHARS`、`TOOL_MODE=catalog`）。
 
-原生支持远程 MCP 的客户端可直接填 URL。调试可用官方工具：`npx @modelcontextprotocol/inspector`。
+Claude.ai 自定义连接器、ChatGPT 连接器、OpenAI Responses API、Cloudflare AI Playground 等原生支持远程 MCP 的客户端，直接填 URL 即可。
 
 ## 编写连接器
 
@@ -156,6 +195,20 @@ node scripts/openapi2connector.js <spec.json 或 URL> 名称 --only GET > connec
 - [ ] 需要登录账号的 OAuth 连接器
 - [ ] 连接器共享市场
 - [ ] 基于 Durable Objects 的 AI 互聊房间（A2A）
+
+## 常见报错
+
+| 现象 | 原因 | 解决 |
+| --- | --- | --- |
+| `{"error":"Use POST for MCP requests"}`（HTTP 405） | 用浏览器打开或 GET 了 `/mcp` | MCP 客户端会 POST；人看工具列表请打开 `/` |
+| `/mcp` 返回 HTTP 401 | 部署设置了 `AUTH_TOKEN` | 请求头加 `Authorization: Bearer <token>` |
+| `github_*` 返回 `Upstream 403 ... rate limit exceeded` | Cloudflare 共享 IP 触发 GitHub 匿名限流 | 自部署后 `npx wrangler secret put GITHUB_TOKEN`，或本地运行 |
+| `Unknown tool: <名称>`（-32602） | 未启用（`ENABLED_CONNECTORS`）、演示已关闭，或名称写错 | 先 `tools/list` 查看 |
+| `bilibili_*` 在 Workers 上失败 | B 站屏蔽 Cloudflare IP | 用 stdio / Docker / 自建 Node |
+| `reader_read` 拒绝某个 URL | SSRF 防护：拒绝 localhost、内网 IP、云元数据地址、非常规端口 | 使用公网 http(s) 地址 |
+| 返回被截断 | `MAX_OUTPUT_CHARS`（默认 20000） | 调大，或在连接器里用 `pick` / `fields` 精简 |
+| wrangler 提示 `Proxy environment variables detected` | 本机设置了代理环境变量 | 可忽略，wrangler 会经代理访问上游 |
+| `wrangler dev` 本地无需 token 就能调 | 未创建 `.dev.vars` | `cp .dev.vars.example .dev.vars` 并设置 `AUTH_TOKEN` |
 
 ## 合规使用
 
