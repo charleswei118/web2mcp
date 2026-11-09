@@ -108,3 +108,39 @@ test("AUTH_TOKEN protects /mcp", async () => {
   assert.equal((await rpc({ jsonrpc: "2.0", id: 1, method: "ping" }, env)).status, 401);
   assert.equal((await rpc({ jsonrpc: "2.0", id: 1, method: "ping" }, env, { authorization: "Bearer s3cret" })).status, 200);
 });
+
+test("Crossref search builds a bounded works query and returns selected metadata", async () => {
+  const reg = buildRegistry({});
+  const s = reg.tools.get("crossref_search");
+  const req = buildRequest(s.connector, s.tool, { query: "Model Context Protocol" });
+  const url = new URL(req.url);
+  assert.equal(url.origin, "https://api.crossref.org");
+  assert.equal(url.pathname, "/works");
+  assert.equal(url.searchParams.get("query"), "Model Context Protocol");
+  assert.equal(url.searchParams.get("rows"), "5");
+  assert.equal(url.searchParams.get("select"), "DOI,title,author,issued,URL");
+  assert.throws(() => buildRequest(s.connector, s.tool, {}), /Missing required/);
+  assert.throws(() => buildRequest(s.connector, s.tool, { query: "x", limit: 21 }), /<= 20/);
+
+  const fakeFetch = async () => new Response(JSON.stringify({ message: { items: [{
+    DOI: "10.1234/example",
+    title: ["A Test Paper"],
+    author: [{ family: "Doe", given: "Jane" }],
+    issued: { "date-parts": [[2024, 2, 3]] },
+    URL: "https://doi.org/10.1234/example",
+    abstract: "not selected",
+  }] } }), { headers: { "content-type": "application/json" } });
+  const result = await handleRpc({
+    jsonrpc: "2.0", id: 1, method: "tools/call",
+    params: { name: "crossref_search", arguments: { query: "example", limit: 1 } },
+  }, reg, {}, fakeFetch);
+  assert.equal(result.result.isError, false);
+  assert.deepEqual(JSON.parse(result.result.content[0].text), [{
+    doi: "10.1234/example",
+    title: ["A Test Paper"],
+    authors: [{ family: "Doe", given: "Jane" }],
+    year: 2024,
+    url: "https://doi.org/10.1234/example",
+  }]);
+});
+
