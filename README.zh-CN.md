@@ -18,6 +18,8 @@
 
 点上方 **Deploy to Cloudflare**：Cloudflare 会把本仓库复制到你的 GitHub 账号，让你填一个 `AUTH_TOKEN`（任意长随机串，比如 `openssl rand -hex 32` 生成），然后自动构建部署。约一分钟后，你的服务就在 `https://web2mcp.<你的子域>.workers.dev/mcp` 上线，之后每次推送到你的副本都会自动重新部署。Workers 免费套餐就够用。
 
+![web2mcp 演示：在公共演示端点列出工具，再调用 wikipedia_summary 与 currency_latest](docs/demo.gif)
+
 ## 30 秒试用
 
 无需安装、无需账号。公共演示端点：

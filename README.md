@@ -30,6 +30,8 @@ Every AI agent (Claude, ChatGPT, Cursor, your own bots…) now speaks the **Mode
    Wikipedia  GitHub  any REST API / web page …
 ```
 
+![web2mcp demo: list tools, then call wikipedia_summary and currency_latest on the public demo](docs/demo.gif)
+
 ## Try it in 30 seconds
 
 No install, no account. A public demo runs at:
