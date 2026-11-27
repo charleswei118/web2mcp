@@ -103,6 +103,7 @@ Not a fit if you need browser automation / logged-in scraping, or OAuth on behal
 | `arxiv_search` | Search arXiv research papers |
 | `holidays_list` | Public holidays by country and year (Nager.Date) |
 | `datamuse_words` | Find English words by meaning (Datamuse) |
+| `wikidata_search` | Wikidata entity search: names to stable IDs |
 | `holidaycn_year` | Mainland China holidays and make-up workdays (调休) for a year |
 | `baiduhot_realtime` | Baidu real-time hot search (百度热搜) |
 | `shici_random` | A random line of classical Chinese poetry (今日诗词) |
